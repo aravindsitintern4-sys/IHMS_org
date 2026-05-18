@@ -6,6 +6,7 @@ import java.time.Duration;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -13,6 +14,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.io.FileHandler;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
@@ -198,9 +200,54 @@ public class reusableCode {
         // HOVER SUBMENU
         actions.moveToElement(submenu).perform();
 
-
         // CLICK SUBMENU
         js.executeScript("arguments[0].click();", submenu);
     }
+    
+    
+//   ENTER INPUT WITH LABEL
+    @And("I enter {string} in {string} label")
+    public void enter_input(String value, String label) {
+
+        By inputLocator = By.xpath("//label[contains(normalize-space(),'" + label + "')]" +
+                "/following::input[1]");
+
+        WebElement enterInput = wait.until(ExpectedConditions.visibilityOfElementLocated(inputLocator));
+        enterInput.clear();
+        enterInput.sendKeys(value);
+    }
+    
+// SELECT OPTION FROM DROPDOWN WITH LABEL
+    @And("I select {string} from {string} label")
+    public void select_dropdown_with_label(String option, String label) {
+
+    	By selectLocator = By.xpath(
+                "//label[contains(normalize-space(),'" + label + "')]" +
+                "/following::select[1]");
+
+        WebElement dropdown = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(selectLocator));
+
+        Select select = new Select(dropdown);
+
+        select.selectByVisibleText(option);
+    }
+    
+//   KEYBORD ACTIONS (ENTER,TAB)
+    @And("I press {string} key")
+    public void keyboard_action(String key) {
+
+    	Actions actions = new Actions(driver);
+
+        // KEYBOARD ACTION
+        if (key.equalsIgnoreCase("ENTER")) {
+            actions.sendKeys(Keys.ENTER).perform();
+        }
+        else if (key.equalsIgnoreCase("TAB")) {
+            actions.sendKeys(Keys.TAB).perform();
+        }
+    }
+    
+   
     
 }
