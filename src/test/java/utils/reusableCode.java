@@ -231,7 +231,7 @@ public class reusableCode {
         Select select = new Select(dropdown);
 
         select.selectByVisibleText(option);
-    }
+    }       
     
 //   KEYBORD ACTIONS (ENTER,TAB)
     @And("I press {string} key")
