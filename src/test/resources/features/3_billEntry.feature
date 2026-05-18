@@ -17,3 +17,4 @@ Scenario: UIN input field
 
 Scenario: Dropdown field
 	And I select "Anandhi A." from "Advised By:" label
+	And I select "Anandhi A." from "Advised By:" label
