@@ -4,6 +4,7 @@ import java.time.Duration;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Then;
 import page.billingPage;
 import utils.driverFactory;
 
@@ -32,6 +33,15 @@ public class billingStep {
         billing.selectLocation(location);
     }
     
+    @Then("Patient demography is displayed")
+    public void patient_demography_display() {
+        billing.verifyPatientDemographyDisplayed();
+    }
+    
+    @And("I enter {string} on input field {string}")
+    public void enter_input(String input, String label) {
+        billing.enterInput(input,label);
+    }
     
     
 }

@@ -44,6 +44,21 @@ public class billingPage {
         select.selectByVisibleText(location);
     }
     
+    public void verifyPatientDemographyDisplayed() {
+		  WebElement demography = wait.until(ExpectedConditions.visibilityOfElementLocated(billingLocator.patientDemography));
+		  if (!demography.isDisplayed()) {
+		      throw new AssertionError("Patient demography is NOT displayed");
+		  }
+		  System.out.println("Patient demography is displayed");
+	} 
     
+    
+    public void enterInput(String input, String label) {
+
+        WebElement enterInput = wait.until(ExpectedConditions.visibilityOfElementLocated(billingLocator.inputField(label)));
+        enterInput.click();
+        enterInput.clear();
+        enterInput.sendKeys(input);
+    }
 	
 }

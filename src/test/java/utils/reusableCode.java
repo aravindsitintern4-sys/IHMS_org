@@ -232,13 +232,16 @@ public class reusableCode {
     @And("I select {string} from {string} label")
     public void select_dropdown_with_label(String option, String label) {
 
-    	By selectLocator = By.xpath("//label[contains(normalize-space(),'" + label + "')]" +
-                "/following::select[1]");
+//    	By selectLocator = By.xpath("//label[contains(normalize-space(),'" + label + "')]" +
+//                "/following::select[1]");
+    	 By selectLocator = By.xpath("//*[contains(normalize-space(),'" + label + "')]" +
+    	            "/following::select[1]");
 
         WebElement dropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(selectLocator));
         Select select = new Select(dropdown);
         select.selectByVisibleText(option);
-    }       
+    }  
+    
     
 //   KEYBORD ACTIONS (ENTER,TAB)
     @And("I press {string} key")
@@ -253,6 +256,20 @@ public class reusableCode {
         else if (key.equalsIgnoreCase("TAB")) {
             actions.sendKeys(Keys.TAB).perform();
         }
+    }
+    
+//   CLOSE ICON (X)
+    @And("I click close icon")
+    public void click_close_icon() {
+
+        By closeIcon = By.xpath(
+                "//*[name()='svg' and contains(@class,'top-2') and contains(@class,'right-2')]");
+
+        WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(closeIcon));
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+
+        js.executeScript("arguments[0].scrollIntoView(true);", element);
+        js.executeScript("arguments[0].click();", element);
     }
     
    
