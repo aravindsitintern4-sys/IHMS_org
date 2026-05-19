@@ -54,17 +54,28 @@ public class reusableCode {
  // POP UP DISPLAY VERIFICATION  
     @Then("popup {string} should be displayed")
     public void popup_displayed(String popupName) {
-        // LOCATOR
-        By popupMsg = By.xpath(
-                "//div[contains(@class,'modal') or contains(@class,'popup') or contains(@class,'container')]//*[normalize-space()='"
-                        + popupName + "']");
-        // ACTION
-        WebElement popup = wait.until(ExpectedConditions.visibilityOfElementLocated(popupMsg));
+//        // LOCATOR
+//        By popupMsg = By.xpath(
+//                "//div[contains(@class,'modal') or contains(@class,'popup') or contains(@class,'container')]//*[normalize-space()='"
+//                        + popupName + "']");
+//        // ACTION
+//        WebElement popup = wait.until(ExpectedConditions.visibilityOfElementLocated(popupMsg));
+//        // VALIDATION
+//        if (popup.isDisplayed()) {
+//            System.out.println("Popup is displayed : " + popupName);
+//        } else {
+//            System.out.println("Popup is not displayed : " + popupName);
+//        }
+    	
+    	By popupLocator = By.xpath("//div//*[contains(normalize-space(),'" + popupName + "')]");
+
+        // WAIT
+        WebElement popup = wait.until(ExpectedConditions.visibilityOfElementLocated(popupLocator));
         // VALIDATION
         if (popup.isDisplayed()) {
-            System.out.println("Popup is displayed : " + popupName);
+            System.out.println("Popup displayed : " + popupName);
         } else {
-            System.out.println("Popup is not displayed : " + popupName);
+            throw new AssertionError("Popup not displayed : " + popupName);
         }
     }
     
@@ -173,7 +184,6 @@ public class reusableCode {
     public void click_menu_and_select_submenu(String mainMenu, String subMenu) {
 
         WebDriver driver = driverFactory.getDriver();
-
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 
         Actions actions = new Actions(driver);
@@ -213,6 +223,7 @@ public class reusableCode {
                 "/following::input[1]");
 
         WebElement enterInput = wait.until(ExpectedConditions.visibilityOfElementLocated(inputLocator));
+        enterInput.click();
         enterInput.clear();
         enterInput.sendKeys(value);
     }
@@ -221,22 +232,18 @@ public class reusableCode {
     @And("I select {string} from {string} label")
     public void select_dropdown_with_label(String option, String label) {
 
-    	By selectLocator = By.xpath(
-                "//label[contains(normalize-space(),'" + label + "')]" +
+    	By selectLocator = By.xpath("//label[contains(normalize-space(),'" + label + "')]" +
                 "/following::select[1]");
 
-        WebElement dropdown = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(selectLocator));
-
+        WebElement dropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(selectLocator));
         Select select = new Select(dropdown);
-
         select.selectByVisibleText(option);
     }       
     
 //   KEYBORD ACTIONS (ENTER,TAB)
     @And("I press {string} key")
     public void keyboard_action(String key) {
-
+    	
     	Actions actions = new Actions(driver);
 
         // KEYBOARD ACTION

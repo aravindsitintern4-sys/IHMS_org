@@ -6,8 +6,8 @@ import java.time.Duration;
 import locators.mainDashLocator;
 
 public class mainDashPage {
-    private final WebDriver driver;
-    private final WebDriverWait wait;
+     WebDriver driver;
+     WebDriverWait wait;
 
     public mainDashPage(WebDriver driver) {
         this.driver = driver;
