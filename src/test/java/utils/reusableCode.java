@@ -183,9 +183,6 @@ public class reusableCode {
     @And("I click {string} menu and select {string}")
     public void click_menu_and_select_submenu(String mainMenu, String subMenu) {
 
-        WebDriver driver = driverFactory.getDriver();
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-
         Actions actions = new Actions(driver);
 
         JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -262,8 +259,7 @@ public class reusableCode {
     @And("I click close icon")
     public void click_close_icon() {
 
-        By closeIcon = By.xpath(
-                "//*[name()='svg' and contains(@class,'top-2') and contains(@class,'right-2')]");
+        By closeIcon = By.xpath("//*[name()='svg' and contains(@class,'top-2') and contains(@class,'right-2')]");
 
         WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(closeIcon));
         JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -271,7 +267,37 @@ public class reusableCode {
         js.executeScript("arguments[0].scrollIntoView(true);", element);
         js.executeScript("arguments[0].click();", element);
     }
+ 
+//   DELETE ICON 
+    @And("I click delete icon for {string}")
+    public void clickDeleteIcon(String itemName) {
+
+        By deleteIcon = By.xpath("//tr[td[contains(normalize-space(),'" + itemName + "')]]" +
+                "//i[contains(@class,'fa-trash-can')]");
+
+        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(deleteIcon));
+
+        Actions actions = new Actions(driver);
+        actions.moveToElement(element).click().perform();
+    }
     
-   
+    
+//    @And("I click {string} button from popup")
+//    public void click_button_from_popup(String buttonName) {
+//
+//        WebDriver driver = driverFactory.getDriver();
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+//
+//        // DYNAMIC BUTTON LOCATOR
+//        By buttonLocator = By.xpath(
+//                "//div[contains(@class,'fixed') or contains(@class,'modal') or contains(@id,'popup')]"
+//                + "//button[.//*[normalize-space()='" + buttonName + "'] "
+//                + "or normalize-space()='" + buttonName + "']"
+//        );
+//
+//        // WAIT AND CLICK
+//        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(buttonLocator));
+//        button.click();
+//    }   
     
 }

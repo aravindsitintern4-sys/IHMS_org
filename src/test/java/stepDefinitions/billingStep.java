@@ -36,7 +36,7 @@ public class billingStep {
     @Then("Patient demography is displayed")
     public void patient_demography_display() {
         billing.verifyPatientDemographyDisplayed();
-    }
+    }                       
     
     @And("I enter {string} on input field {string}")
     public void enter_input(String input, String label) {
