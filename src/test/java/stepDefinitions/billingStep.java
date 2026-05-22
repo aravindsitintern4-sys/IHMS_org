@@ -43,5 +43,11 @@ public class billingStep {
         billing.enterInput(input,label);
     }
     
+//	 DROPDOWN WITH NPUT FIELD (LIKE NG-DROPDOWN)
+	 @And("I select dropdown value as {string} from {string} label")
+	 public void select_dropdown_value_from_label(String option, String label) {
+		 billing.dropdownOptionSelect(option,label); 
+	 }
+    
     
 }

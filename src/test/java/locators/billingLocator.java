@@ -21,4 +21,12 @@ public class billingLocator {
 		 return By.xpath("//label[contains(normalize-space(),'" + label + "')]" +
 	        "/following::app-text-box//input[@type='text'][1]");
 	 }
+	 
+    public static By optionLocator(String option) {
+    	return By.xpath("//div[contains(@class,'cursor-pointer') and normalize-space()='" + option + "']");
+    }
+    
+    public static By dropdownLocator(String label) { 
+    	return By.xpath("//label[contains(normalize-space(),'" + label + "')]/following::div[contains(@class,'cursor-pointer')][1]");
+    }
 }

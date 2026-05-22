@@ -30,274 +30,333 @@ public class reusableCode {
 		   this.driver = driverFactory.getDriver();
 	        this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 	    }
+	   
+	   
+//      WAIT TIME
+	    @And("I wait for {string} seconds")
+	    public void wait_for_seconds(String seconds) throws InterruptedException {
+	        int time = Integer.parseInt(seconds);
+	        Thread.sleep(time * 1000);
+	    }
    
-// ALERT ERROR MESSAGE DISPLAY
-    @Then("{string} toast should be displayed")
-    public void error_toast_should_be_displayed(String expectedMsg) {
-        // LOCATOR
-        By toastMsg = By.xpath("//div[@role='alert'] | //app-toast//span");
-
-        // ACTION
-        WebElement toast = wait.until(ExpectedConditions.visibilityOfElementLocated(toastMsg));
-        String actualMsg = toast.getText().trim();
-
-        // VALIDATION
-        if (actualMsg.equals(expectedMsg)) {
-            System.out.println("Toast Message Matched : " + actualMsg);
-        } else {
-            System.out.println("Expected Message : " + expectedMsg);
-            System.out.println("Actual Message : " + actualMsg);
-        }
-    }
+// 	    ALERT ERROR MESSAGE DISPLAY
+	    @Then("{string} toast should be displayed")
+	    public void error_toast_should_be_displayed(String expectedMsg) {
+	        // LOCATOR
+	        By toastMsg = By.xpath("//div[@role='alert'] | //app-toast//span");
+	
+	        // ACTION
+	        WebElement toast = wait.until(ExpectedConditions.visibilityOfElementLocated(toastMsg));
+	        String actualMsg = toast.getText().trim();
+	
+	        // VALIDATION
+	        if (actualMsg.equals(expectedMsg)) {
+	            System.out.println("Toast Message Matched : " + actualMsg);
+	        } else {
+	            System.out.println("Expected Message : " + expectedMsg);
+	            System.out.println("Actual Message : " + actualMsg);
+	        }
+	    }
     
     
- // POP UP DISPLAY VERIFICATION  
-    @Then("popup {string} should be displayed")
-    public void popup_displayed(String popupName) {
-//        // LOCATOR
-//        By popupMsg = By.xpath(
-//                "//div[contains(@class,'modal') or contains(@class,'popup') or contains(@class,'container')]//*[normalize-space()='"
-//                        + popupName + "']");
-//        // ACTION
-//        WebElement popup = wait.until(ExpectedConditions.visibilityOfElementLocated(popupMsg));
-//        // VALIDATION
-//        if (popup.isDisplayed()) {
-//            System.out.println("Popup is displayed : " + popupName);
-//        } else {
-//            System.out.println("Popup is not displayed : " + popupName);
-//        }
-    	
-    	By popupLocator = By.xpath("//div//*[contains(normalize-space(),'" + popupName + "')]");
-
-        // WAIT
-        WebElement popup = wait.until(ExpectedConditions.visibilityOfElementLocated(popupLocator));
-        // VALIDATION
-        if (popup.isDisplayed()) {
-            System.out.println("Popup displayed : " + popupName);
-        } else {
-            throw new AssertionError("Popup not displayed : " + popupName);
-        }
-    }
+// 		POP UP DISPLAY VERIFICATION  
+	    @Then("popup {string} should be displayed")
+	    public void popup_displayed(String popupName) {
+	//        // LOCATOR
+	//        By popupMsg = By.xpath(
+	//                "//div[contains(@class,'modal') or contains(@class,'popup') or contains(@class,'container')]//*[normalize-space()='"
+	//                        + popupName + "']");
+	//        // ACTION
+	//        WebElement popup = wait.until(ExpectedConditions.visibilityOfElementLocated(popupMsg));
+	//        // VALIDATION
+	//        if (popup.isDisplayed()) {
+	//            System.out.println("Popup is displayed : " + popupName);
+	//        } else {
+	//            System.out.println("Popup is not displayed : " + popupName);
+	//        }
+	    	
+	    	By popupLocator = By.xpath("//div//*[contains(normalize-space(),'" + popupName + "')]");
+	
+	        // WAIT
+	        WebElement popup = wait.until(ExpectedConditions.visibilityOfElementLocated(popupLocator));
+	        // VALIDATION
+	        if (popup.isDisplayed()) {
+	            System.out.println("Popup displayed : " + popupName);
+	        } else {
+	            throw new AssertionError("Popup not displayed : " + popupName);
+	        }
+	    }
     
     
- // SCREENSHOT
-
-    @Then("screenshot should be captured {string}")
-    public void take_screenshot(String fileName) {
-        try {
-            Thread.sleep(4000);
-            TakesScreenshot ts = (TakesScreenshot) driverFactory.getDriver();
-
-            File src = ts.getScreenshotAs(OutputType.FILE);
-            
-            String path =System.getProperty("user.dir")+ "\\screenshots\\";
-            File dir = new File(path);
-
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-
-            File dest = new File(path + fileName + ".png");
-            FileHandler.copy(src, dest);
-            
-            System.out.println("Screenshot saved at : " + dest.getAbsolutePath());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+// 		SCREENSHOT
+	    @Then("screenshot should be captured {string}")
+	    public void take_screenshot(String fileName) {
+	        try {
+	            Thread.sleep(4000);
+	            TakesScreenshot ts = (TakesScreenshot) driverFactory.getDriver();
+	
+	            File src = ts.getScreenshotAs(OutputType.FILE);
+	            
+	            String path =System.getProperty("user.dir")+ "\\screenshots\\";
+	            File dir = new File(path);
+	
+	            if (!dir.exists()) {
+	                dir.mkdirs();
+	            }
+	
+	            File dest = new File(path + fileName + ".png");
+	            FileHandler.copy(src, dest);
+	            
+	            System.out.println("Screenshot saved at : " + dest.getAbsolutePath());
+	
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
     
- // FILE DOWNLOAD
-
-    @Then("file should be downloaded successfully")
-    public void verify_file_download() {
-
-        String path =System.getProperty("user.home") + "\\Downloads";
-
-        File dir = new File(path);
-        boolean downloaded = false;
-        
-        int timeout = 20;
-        for (int i = 0; i < timeout; i++) {
-            File[] files = dir.listFiles();
-            if (files != null && files.length > 0) {
-                for (File file : files) {
-                   System.out.println("Found file : " + file.getName());
-
-                    // IGNORE CHROME TEMP FILE
-                    if (!file.getName().endsWith(".crdownload")) {
-                        downloaded = true;
-                        break;
-                    }
-                }
-            }
-            if (downloaded) {
-                break;
-            }
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        Assert.assertTrue(downloaded, "File not downloaded!");
-        System.out.println("File downloaded successfully");
-    }
+// 		FILE DOWNLOAD
+	    @Then("file should be downloaded successfully")
+	    public void verify_file_download() {
+	
+	        String path =System.getProperty("user.home") + "\\Downloads";
+	
+	        File dir = new File(path);
+	        boolean downloaded = false;
+	        
+	        int timeout = 20;
+	        for (int i = 0; i < timeout; i++) {
+	            File[] files = dir.listFiles();
+	            if (files != null && files.length > 0) {
+	                for (File file : files) {
+	                   System.out.println("Found file : " + file.getName());
+	
+	                    // IGNORE CHROME TEMP FILE
+	                    if (!file.getName().endsWith(".crdownload")) {
+	                        downloaded = true;
+	                        break;
+	                    }
+	                }
+	            }
+	            if (downloaded) {
+	                break;
+	            }
+	            try {
+	                Thread.sleep(1000);
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	        }
+	        Assert.assertTrue(downloaded, "File not downloaded!");
+	        System.out.println("File downloaded successfully");
+	    }
     
  
- // BUTTON CLICK COMMON
-    @And("I click {string} button")
-    public void click_button(String btn) {
-        try {
-            // LOCATOR
-            By button = By.xpath("//button[normalize-space()='"+ btn + "']");
-
-            // FIND ELEMENT
-            WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(button));
-
-            // SCROLL TO ELEMENT
-            ((JavascriptExecutor) driverFactory.getDriver()).executeScript("arguments[0].scrollIntoView({block:'center'});",element);
-
-            // CHECK ENABLED
-            if (!element.isEnabled()) {
-            	throw new RuntimeException(btn + " button is disabled");
-            }
-            // CLICK ACTION
-            try {
-                wait.until(ExpectedConditions.elementToBeClickable(button)).click();
-            } catch (Exception e) {
-                try {
-                    element = wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(button)));
-                    element.click();
-                } catch (Exception ex) {
-                    ((JavascriptExecutor) driverFactory.getDriver()).executeScript("arguments[0].click();",element);
-                }
-            }
-            System.out.println(btn + " button clicked successfully");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
-// CLICK AND SELECT MAIN OPTIONS AND SUB OPTIONS  
-    @And("I click {string} menu and select {string}")
-    public void click_menu_and_select_submenu(String mainMenu, String subMenu) {
-
-        Actions actions = new Actions(driver);
-
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-
-        // SWITCH TO ACTIVE WINDOW
-        for (String window : driver.getWindowHandles()) {
-            driver.switchTo().window(window);
-        }
-
-        // MAIN MENU
-        WebElement menu = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[normalize-space()='" + mainMenu + "']")));
-
-        // SCROLL
-        js.executeScript("arguments[0].scrollIntoView(true);", menu);
-
-        // HOVER
-        actions.moveToElement(menu).perform();
-
-        // SUB MENU
-        WebElement submenu = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[normalize-space()='" + subMenu + "']")));
-
-        // HOVER SUBMENU
-        actions.moveToElement(submenu).perform();
-
-        // CLICK SUBMENU
-        js.executeScript("arguments[0].click();", submenu);
-    }
-    
-    
-//   ENTER INPUT WITH LABEL
-    @And("I enter {string} in {string} label")
-    public void enter_input(String value, String label) {
-
-        By inputLocator = By.xpath("//label[contains(normalize-space(),'" + label + "')]" +
-                "/following::input[1]");
-
-        WebElement enterInput = wait.until(ExpectedConditions.visibilityOfElementLocated(inputLocator));
-        enterInput.click();
-        enterInput.clear();
-        enterInput.sendKeys(value);
-    }
-    
-// SELECT OPTION FROM DROPDOWN WITH LABEL
-    @And("I select {string} from {string} label")
-    public void select_dropdown_with_label(String option, String label) {
-
-//    	By selectLocator = By.xpath("//label[contains(normalize-space(),'" + label + "')]" +
-//                "/following::select[1]");
-    	 By selectLocator = By.xpath("//*[contains(normalize-space(),'" + label + "')]" +
-    	            "/following::select[1]");
-
-        WebElement dropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(selectLocator));
-        Select select = new Select(dropdown);
-        select.selectByVisibleText(option);
-    }  
+// 		BUTTON CLICK COMMON
+	    @And("I click {string} button")
+	    public void click_button(String btn) {
+	        try {
+	            // LOCATOR
+	            By button = By.xpath("//button[normalize-space()='"+ btn + "']");
+	
+	            // FIND ELEMENT
+	            WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(button));
+	
+	            // SCROLL TO ELEMENT
+	            ((JavascriptExecutor) driverFactory.getDriver()).executeScript("arguments[0].scrollIntoView({block:'center'});",element);
+	
+	            // CHECK ENABLED
+	            if (!element.isEnabled()) {
+	            	throw new RuntimeException(btn + " button is disabled");
+	            }
+	            // CLICK ACTION
+	            try {
+	                wait.until(ExpectedConditions.elementToBeClickable(button)).click();
+	            } catch (Exception e) {
+	                try {
+	                    element = wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(button)));
+	                    element.click();
+	                } catch (Exception ex) {
+	                    ((JavascriptExecutor) driverFactory.getDriver()).executeScript("arguments[0].click();",element);
+	                }
+	            }
+	            System.out.println(btn + " button clicked successfully");
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    
+// 		CLICK AND SELECT MAIN OPTIONS AND SUB OPTIONS  
+	    @And("I click {string} menu and select {string}")
+	    public void click_menu_and_select_submenu(String mainMenu, String subMenu) {
+	
+	        Actions actions = new Actions(driver);
+	
+	        JavascriptExecutor js = (JavascriptExecutor) driver;
+	
+	        // SWITCH TO ACTIVE WINDOW
+	        for (String window : driver.getWindowHandles()) {
+	            driver.switchTo().window(window);
+	        }
+	
+	        // MAIN MENU
+	        WebElement menu = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//span[normalize-space()='" + mainMenu + "']")));
+	
+	        // SCROLL
+	        js.executeScript("arguments[0].scrollIntoView(true);", menu);
+	
+	        // HOVER
+	        actions.moveToElement(menu).perform();
+	
+	        // SUB MENU
+	        WebElement submenu = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[normalize-space()='" + subMenu + "']")));
+	
+	        // HOVER SUBMENU
+	        actions.moveToElement(submenu).perform();
+	
+	        // CLICK SUBMENU
+	        js.executeScript("arguments[0].click();", submenu);
+	    }
     
     
-//   KEYBORD ACTIONS (ENTER,TAB)
-    @And("I press {string} key")
-    public void keyboard_action(String key) {
-    	
-    	Actions actions = new Actions(driver);
-
-        // KEYBOARD ACTION
-        if (key.equalsIgnoreCase("ENTER")) {
-            actions.sendKeys(Keys.ENTER).perform();
-        }
-        else if (key.equalsIgnoreCase("TAB")) {
-            actions.sendKeys(Keys.TAB).perform();
-        }
-    }
+//   	ENTER INPUT WITH LABEL
+	    @And("I enter {string} in {string} label")
+	    public void enter_input(String value, String label) {
+	
+	        By inputLocator = By.xpath("//label[contains(normalize-space(),'" + label + "')]" +
+	                "/following::input[1]");
+	
+	        WebElement enterInput = wait.until(ExpectedConditions.visibilityOfElementLocated(inputLocator));
+	        enterInput.click();
+	        enterInput.clear();
+	        enterInput.sendKeys(value);
+	    }
     
-//   CLOSE ICON (X)
-    @And("I click close icon")
-    public void click_close_icon() {
-
-        By closeIcon = By.xpath("//*[name()='svg' and contains(@class,'top-2') and contains(@class,'right-2')]");
-
-        WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(closeIcon));
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-
-        js.executeScript("arguments[0].scrollIntoView(true);", element);
-        js.executeScript("arguments[0].click();", element);
-    }
+// 		SELECT OPTION FROM DROPDOWN WITH LABEL
+	    @And("I select {string} from {string} label")
+	    public void select_dropdown_with_label(String option, String label) {
+	
+	//    	By selectLocator = By.xpath("//label[contains(normalize-space(),'" + label + "')]" +
+	//                "/following::select[1]");
+	    	 By selectLocator = By.xpath("//*[contains(normalize-space(),'" + label + "')]" +
+	    	            "/following::select[1]");
+	
+	        WebElement dropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(selectLocator));
+	        Select select = new Select(dropdown);
+	        select.selectByVisibleText(option);
+	    }  
+	    
+    
+//   	KEYBORD ACTIONS (ENTER,TAB)
+	    @And("I press {string} key")
+	    public void keyboard_action(String key) {
+	    	
+	    	Actions actions = new Actions(driver);
+	
+	        // KEYBOARD ACTION
+	        if (key.equalsIgnoreCase("ENTER")) {
+	            actions.sendKeys(Keys.ENTER).perform();
+	        }
+	        else if (key.equalsIgnoreCase("TAB")) {
+	            actions.sendKeys(Keys.TAB).perform();
+	        }
+	    }
+    
+//   	CLOSE ICON (X)
+	    @And("I click close icon")
+	    public void click_close_icon() {
+	
+	        By closeIcon = By.xpath("//*[name()='svg' and contains(@class,'top-2') and contains(@class,'right-2')]");
+	
+	        WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(closeIcon));
+	        JavascriptExecutor js = (JavascriptExecutor) driver;
+	
+	        js.executeScript("arguments[0].scrollIntoView(true);", element);
+	        js.executeScript("arguments[0].click();", element);
+	    }
  
-//   DELETE ICON 
-    @And("I click delete icon for {string}")
-    public void clickDeleteIcon(String itemName) {
-
-        By deleteIcon = By.xpath("//tr[td[contains(normalize-space(),'" + itemName + "')]]" +
-                "//i[contains(@class,'fa-trash-can')]");
-
-        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(deleteIcon));
-
-        Actions actions = new Actions(driver);
-        actions.moveToElement(element).click().perform();
-    }
+//  	 DELETE ICON 
+	    @And("I click delete icon for {string}")
+	    public void clickDeleteIcon(String itemName) {
+	
+	        By deleteIcon = By.xpath("//tr[td[contains(normalize-space(),'" + itemName + "')]]" +
+	                "//i[contains(@class,'fa-trash-can')]");
+	
+	        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(deleteIcon));
+	
+	        Actions actions = new Actions(driver);
+	        actions.moveToElement(element).click().perform();
+	    }
     
+//   	RED COLOR INDICATING REQUIRED FIELD ALERT 
+	    @Then("I should see {string} validation message")
+	    public void verify_validation_message(String expectedMessage) {
+	
+	        By validationMsg = By.xpath("//div[contains(@class,'text-red-500') and normalize-space()='" + expectedMessage + "']");
+	
+	        WebElement message = wait.until(ExpectedConditions.visibilityOfElementLocated(validationMsg));
+	        Assert.assertEquals(message.getText().trim(), expectedMessage);
+	    }
     
-//    @And("I click {string} button from popup")
-//    public void click_button_from_popup(String buttonName) {
-//
-//        WebDriver driver = driverFactory.getDriver();
-//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-//
-//        // DYNAMIC BUTTON LOCATOR
-//        By buttonLocator = By.xpath(
-//                "//div[contains(@class,'fixed') or contains(@class,'modal') or contains(@id,'popup')]"
-//                + "//button[.//*[normalize-space()='" + buttonName + "'] "
-//                + "or normalize-space()='" + buttonName + "']"
-//        );
-//
-//        // WAIT AND CLICK
-//        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(buttonLocator));
-//        button.click();
-//    }   
+//   	READONLY FIELD VALIDATION                                          
+	    @Then("I verify {string} field is readonly")
+	    public void verify_field_is_readonly(String fieldName) {
+	
+	        By fieldLocator = By.xpath("//label[contains(normalize-space(),'" + fieldName + "')]/following::input[1]");
+	
+	        WebElement field = wait.until(ExpectedConditions.visibilityOfElementLocated(fieldLocator));
+	
+	        String readonly = field.getAttribute("readonly");
+	        Assert.assertNotNull(readonly, fieldName + " field is not readonly");
+	    }
+    
+//    	CLEAR THE INPUT FIELD     
+	    @And("I clear {string} input field")
+	    public void clear_input_field(String fieldName) {     
+	
+	        By fieldLocator = By.xpath("//label[contains(normalize-space(),'" + fieldName + "')]/following::input[1]"); 
+	
+	        WebElement field = wait.until(ExpectedConditions.visibilityOfElementLocated(fieldLocator));        
+	        field.click();
+	
+	        String value = field.getAttribute("value");
+	
+	        if (value != null) {
+	            for (int i = 0; i < value.length(); i++) {
+	                field.sendKeys(Keys.BACK_SPACE);
+	            }
+	        }
+	    }
+	    
+//   	ENTER INPUT WITH LABEL FOR TEXT AREA
+	    @And("I enter {string} in textarea for {string} label")
+	    public void enter_input_in_textarea(String value, String label) {
+	
+	        By inputLocator = By.xpath("//label[contains(normalize-space(),'" + label + "')]" +
+	                "/following::textarea[1]");
+	
+	        WebElement enterInput = wait.until(ExpectedConditions.visibilityOfElementLocated(inputLocator));
+	        enterInput.click();
+	        enterInput.clear();
+	        enterInput.sendKeys(value);
+	    }
+    
+//    BUTTON ACTIONS INSIDE POPUP
+	//    @And("I click {string} button from popup")
+	//    public void click_button_from_popup(String buttonName) {
+	//
+	//        WebDriver driver = driverFactory.getDriver();
+	//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+	//
+	//        // DYNAMIC BUTTON LOCATOR
+	//        By buttonLocator = By.xpath(
+	//                "//div[contains(@class,'fixed') or contains(@class,'modal') or contains(@id,'popup')]"
+	//                + "//button[.//*[normalize-space()='" + buttonName + "'] "
+	//                + "or normalize-space()='" + buttonName + "']"
+	//        );
+	//
+	//        // WAIT AND CLICK
+	//        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(buttonLocator));
+	//        button.click();
+	//    }   
     
 }

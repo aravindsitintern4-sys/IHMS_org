@@ -60,5 +60,12 @@ public class billingPage {
         enterInput.clear();
         enterInput.sendKeys(input);
     }
+    
+    public void dropdownOptionSelect(String option, String label) {
+    	WebElement dropdown = wait.until(ExpectedConditions.elementToBeClickable(billingLocator.dropdownLocator(label)));
+    	dropdown.click();
+    	WebElement optionSelect =wait.until(ExpectedConditions.elementToBeClickable(billingLocator.optionLocator(option)));
+    	optionSelect.click();
+	}
 	
 }
