@@ -38,6 +38,7 @@ public class billingStep {
         billing.verifyPatientDemographyDisplayed();
     }                       
     
+//    FEES AND AMOUNT INPUT FIELD
     @And("I enter {string} on input field {string}")
     public void enter_input(String input, String label) {
         billing.enterInput(input,label);
@@ -47,6 +48,12 @@ public class billingStep {
 	 @And("I select dropdown value as {string} from {string} label")
 	 public void select_dropdown_value_from_label(String option, String label) {
 		 billing.dropdownOptionSelect(option,label); 
+	 }
+	 
+//	 FORCE INPUT (CORPORATE INPUT FIELD)
+	 @And("I enter input value as {string} on input field {string}")
+	 public void enter_input_value_for_label_force_input(String input, String label) throws InterruptedException {
+	      billing.enterInputValue(input,label);
 	 }
     
     

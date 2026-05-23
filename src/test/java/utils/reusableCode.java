@@ -75,7 +75,7 @@ public class reusableCode {
 	//            System.out.println("Popup is not displayed : " + popupName);
 	//        }
 	    	
-	    	By popupLocator = By.xpath("//div//*[contains(normalize-space(),'" + popupName + "')]");
+	    	By popupLocator = By.xpath("//*[contains(normalize-space(),'" + popupName + "')]");
 	
 	        // WAIT
 	        WebElement popup = wait.until(ExpectedConditions.visibilityOfElementLocated(popupLocator));
@@ -321,7 +321,7 @@ public class reusableCode {
 	        String value = field.getAttribute("value");
 	
 	        if (value != null) {
-	            for (int i = 0; i < value.length(); i++) {
+	            for (int i = 0; i < value.length(); i++) {      
 	                field.sendKeys(Keys.BACK_SPACE);
 	            }
 	        }

@@ -3,8 +3,6 @@
 
 Feature: Billing Feature 
 
-
-	
 # OTHER PATIENT TYPE
 Scenario: Patient type Others 
 	And I select "Others" from "Patient Type:" label
@@ -81,7 +79,7 @@ Scenario: Character required validation in UIN field
 	And I should see "10 characters required." validation message
 
 Scenario: INVALID PIN
-	And I enter "0024425837" in "UIN:" label
+	And I enter "0024425944" in "UIN:" label
     And I press "Enter" key 
     Then popup "Pin Verification" should be displayed
 	And I enter "485" in "Enter 3 Digit Pin" label
@@ -109,7 +107,7 @@ Scenario: Invalid UIN input field
   And I press "Enter" key
 
 Scenario: UIN input field
-  And I enter "0024425942" in "UIN:" label
+  And I enter "0024425944" in "UIN:" label
   And I press "Enter" key 
   #Then "Patient is not registered today or not admitted" toast should be displayed
 
@@ -121,7 +119,7 @@ Scenario: UIN input field
   
 Scenario: MRN FIELD
 	Then popup "Pin Verification" should be displayed
-	And I enter "458" in "Enter 3 Digit Pin" label
+	And I enter "459" in "Enter 3 Digit Pin" label
     And I press "Enter" key
 
 Scenario: Patient demography display
@@ -152,10 +150,10 @@ Scenario: Corporate details
 	And I select "CORPORATE" from "Patient Category:" label
 	Then popup "Corporate Details" should be displayed
 	And I select "AEF TRAUMA FUND" from "Corporate Name" label
-	And I enter "515678" in "Document Ref.No" label
+	And I enter input value as "515678" on input field "Document Ref.No"
 	And I select "Employee" from "Employee Grade" label
-	And I enter "51665655654" in "Employee Code" label
-	And I enter "51235646565" in "Claim ID" label
+	And I enter input value as "51665655654" on input field "Employee Code"
+	And I enter input value as "5464654654656456" on input field "Claim ID"
 	And I enter "Corporate remarks entered" in textarea for "Remarks / Registration No" label
 	And I click "Submit" button
 	And I click delete icon for "Corporate Credit"
@@ -196,7 +194,7 @@ Scenario: CASH payment with Concession selection
 	And I select "Concession" from "Patient Sub Category:" label
 	Then popup "Concession Details" should be displayed
 	And I select dropdown value as "AEH-Melur" from "Concession Approved By" label
-	And I enter "400" in "% Concession granted" label
+	And I enter input value as "40" on input field "% Concession granted"
 	And I select dropdown value as "Clinical Research" from "Reason" label
 	And I enter "Concession remarks are entered" in "Remarks" label
 	And I click "Save" button
@@ -248,23 +246,40 @@ Scenario: valid Test data for bill entry with cash
     Then Patient demography is displayed
 	And I select "Anandhi A." from "Advised By:" label   
 	And I select investigation "ACCESSIBLE PRP"
-	And I select eye "BE"
+	And I select eye "BE"  
 	And I select location "RETINA CLINIC"
 	And I press "Enter" key
 	And I select investigation "90D LENS EXAMINATION"
-	And I select location "GENERAL CLINIC"                               
+	And I select location "GENERAL CLINIC"                                
 	And I press "Enter" key
 	And I select "FULL PAYMENT" from "Patient Category:" label
 	And I select "CASH" from "Payment Type:" label
 	And I clear "Fees:" input field
 	And I enter "100" on input field "Fees:" 
 	And I press "Enter" key
-	And I click "Cancel" button
-	And I click "Yes" button
+	And I click "Save" button
+	Then "Payment not Completed" toast should be displayed
+	
+Scenario: After give full payment try CORPORATE 
+	And I select "CORPORATE" from "Patient Category:" label
+	Then popup "Alert" should be displayed
+	And I click "Ok" button
+	
+Scenario: Save billing
+	And I select "FULL PAYMENT" from "Patient Category:" label
+	And I select "NEFT PAYMENT" from "Payment Type:" label
+	Then popup "NEFT Details" should be displayed
+	And I enter "37015754" in "NEFT Ref. No" label
+	And I enter "asdfgh" in "Bank Name" label
+	And I enter "18-05-2026" in "Transaction Date" label
+	And I click "Submit" button
+	And I wait for "2" seconds
+	And I click "Save" button
+
+	
 
 
    	
-
 
 
 

@@ -67,5 +67,30 @@ public class billingPage {
     	WebElement optionSelect =wait.until(ExpectedConditions.elementToBeClickable(billingLocator.optionLocator(option)));
     	optionSelect.click();
 	}
+    
+    public void enterInputValue(String input, String label) throws InterruptedException {
+
+        WebElement enterInput = wait.until(ExpectedConditions.elementToBeClickable(billingLocator.inputValueField(label)));
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].focus();", enterInput);
+
+        // CLEAR FIELD
+        enterInput.sendKeys(Keys.CONTROL + "a");
+        enterInput.sendKeys(Keys.DELETE);
+
+        // SLOW TYPING
+        for (char ch : input.toCharArray()) {
+            enterInput.sendKeys(String.valueOf(ch));
+            
+            js.executeScript("arguments[0].dispatchEvent(new Event('input', { bubbles: true }));",enterInput);
+            Thread.sleep(100);
+        }
+
+        js.executeScript(
+            "arguments[0].dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));" +
+            "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));" +
+            "arguments[0].blur();",enterInput);
+    }
 	
 }
